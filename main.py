@@ -7,6 +7,8 @@ def main():
     print(f"Screen height: {SCREEN_HEIGHT}")
 
     pygame.init()
+    clock = pygame.time.Clock()
+    dt = clock.tick(60) / 1000  # Amount of seconds between each loop
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Asteroids")
 
