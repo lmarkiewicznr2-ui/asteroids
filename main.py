@@ -40,6 +40,11 @@ def main():
 
         # Update all updatable sprites
         updatable.update(dt)
+        for asteroid in asteroids:
+            if player.collides_with(asteroid):
+                print("Game Over!")
+                pygame.quit()
+                exit()
 
         # Draw all drawable sprites
         screen.fill((0, 0, 0))
