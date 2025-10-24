@@ -14,7 +14,7 @@ drawable = pygame.sprite.Group()
 Asteroid.containers = (asteroids, updatable, drawable)
 AsteroidField.containers = (updatable,)
 Player.containers = (updatable, drawable)
-Shot.containers = (drawable,)  # add shots to drawable automatically
+Shot.containers = (updatable,drawable)  # add shots to drawable automatically
 
 # Create asteroid field
 asteroid_field = AsteroidField()
@@ -46,11 +46,17 @@ def main():
         updatable.update(dt)
 
         # Check collisions between player and asteroids
-        for asteroid in asteroids:
+        for asteroid in list(asteroids):
             if player.collides_with(asteroid):
                 print("Game Over!")
                 pygame.quit()
                 exit()
+            for shot in shots[:]:
+                if asteroid.collides_with(shot):
+                    shot.kill()
+                    asteroid.kill()
+                    if shot in shots:
+                        shots.remove(shot)
 
         # Update bullets and remove off-screen shots
         for shot in shots[:]:
