@@ -1,6 +1,9 @@
 import pygame
 from constants import *
 from player import Player
+updatable = pygame.sprite.Group()
+drawable = pygame.sprite.Group()
+Player.containers = (updatable, drawable)
 
 def main():
     print("Starting Asteroids!")
@@ -20,11 +23,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False  # stops the loop when user clicks close 
-        player.update(dt)  # Update player state
+        updatable.update(dt)  # Update player state
         # Fill the screen black
         screen.fill((0, 0, 0))
 
-        player.draw(screen)  # Draw the player
+        for obj in drawable:
+            obj.draw(screen)  # Draw the player
 
         # Refresh the display
         pygame.display.flip()
@@ -33,3 +37,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
