@@ -3,6 +3,7 @@ from constants import *
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
+from shot import Shot
 
 # Sprite groups
 asteroids = pygame.sprite.Group()
@@ -13,6 +14,7 @@ drawable = pygame.sprite.Group()
 Asteroid.containers = (asteroids, updatable, drawable)
 AsteroidField.containers = (updatable,)
 Player.containers = (updatable, drawable)
+Shot.containers = (drawable,)  # add shots to drawable automatically
 
 # Create asteroid field
 asteroid_field = AsteroidField()
@@ -27,26 +29,37 @@ def main():
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Asteroids")
 
-    running = True
-    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    # Create player and shots list
+    shots = []
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, shots)
 
+    running = True
     while running:
-        dt = clock.tick(60) / 1000  # Time in seconds since last loop
+        dt = clock.tick(60) / 1000  # Delta time in seconds
 
         # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        # Update all updatable sprites
+        # Update all updatable sprites (includes player & asteroids)
         updatable.update(dt)
+
+        # Check collisions between player and asteroids
         for asteroid in asteroids:
             if player.collides_with(asteroid):
                 print("Game Over!")
                 pygame.quit()
                 exit()
 
-        # Draw all drawable sprites
+        # Update bullets and remove off-screen shots
+        for shot in shots[:]:
+            shot.update(dt)
+            if (shot.position.x < 0 or shot.position.x > SCREEN_WIDTH or
+                shot.position.y < 0 or shot.position.y > SCREEN_HEIGHT):
+                shots.remove(shot)
+
+        # Draw everything
         screen.fill((0, 0, 0))
         for obj in drawable:
             obj.draw(screen)
@@ -54,6 +67,7 @@ def main():
         pygame.display.flip()
 
     pygame.quit()
+
 
 if __name__ == "__main__":
     main()
