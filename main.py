@@ -19,8 +19,8 @@ def main():
         dt = clock.tick(60) / 1000  # Amount of seconds between each loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False  # stops the loop when user clicks close
-
+                running = False  # stops the loop when user clicks close 
+        player.update(dt)  # Update player state
         # Fill the screen black
         screen.fill((0, 0, 0))
 
